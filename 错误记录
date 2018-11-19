@@ -1,0 +1,92 @@
+-------------------------------------------------------------20181117------------------------------------------------
+lampp连接数据库
+命令：mysql -u root -p
+错误：Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)
+
+解决办法：
+在rc.local里加入了两行命令：
+/opt/lampp/lampp start
+sudo ln -s /opt/lampp/var/mysql/mysql.sock /var/run/mysqld/mysqld.sock 
+
+
+github 安装问题：
+（1）源码安装完成如何设置全局环境变量
+解决办法：
+执行git --version时出现bash:git:command not found。
+解决方法：
+a.打开/etc/profile, 找到path manipulation那一行，在下面的if then中添加  pathmunge 命令路径  （如：pathmunge /opt/git/git-1.9.0/bin)。然后执行source /etc/profile, 再次执行git --version就可执行成功，会显示git的版本号。
+b.打开 /etc/bashrc, 在最后一行 添加：export PATH=$PATH:/usr/local/git/bin
+
+
+（2）ssh-keygen -t ras -C “youremail@domain.com” 
+系统会提示key的保存位置（一般是~/.ssh目录）和指定口令，保持默认，连续三次即可
+然后vim打开id_rsa.pub文件，粘贴到github账号管理的添加SSH KEY界面中 
+vim ~/.ssh/id_rsa.pub 
+然后将id_rsa.pub文件中的内容粘贴到gitub的“SSH and GPG keys”中。
+问题：
+在执行完成这一步后，并没有生成 id_rsa.pub
+解决办法：
+#ssh-keygen -t rsa -C "user1@email.com"
+一路回车即可；
+
+
+（3）执行$ ssh-keygen -t rsa -C xxx@xxx.com
+报错：Too many arguments.
+问题解决办法：输入的格式有问题
+正确格式如右侧：$ ssh-keygen -t rsa -C "XXX@XXX.COM"
+
+(4)git 安装设置全局变量
+/etc/bashrc 中添加如下内容：
+export PATH=$PATH:/usr/local/git/bin
+这个有效果
+
+/etc/profile 中添加如下内容：
+export PATH=$PATH:/usr/local/git/bin  这个并不起效果
+
+执行git push origin master报错
+error: 无法推送一些引用到 'https://github.com/GISLearner/task_jcyd.git'
+提示：更新被拒绝，因为远程版本库包含您本地尚不存在的提交。这通常是因为另外
+提示：一个版本库已向该引用进行了推送。再次推送前，您可能需要先整合远程变更
+提示：（如 'git pull ...'）。
+
+执行git push -u origin +master​ 报错
+src refspec master​ does not match any.
+
+解决办法：
+git add.
+git pull origin master -------- 先更新
+git push origin master-----------再提交
+
+
+在执行git pull origin master时出现：
+　　fatal: 'origin' does not appear to be a git repository
+　　fatal: Could not read from remote repository.
+　　Please make sure you have the correct access rights and the repository exists
+解决方案：
+git remote add origin git@github:bx_reader/bx-reader-api.git
+将关联远程仓库为origin
+
+git push 到github远程仓库的时候，出现报错”Everything up-to-date”
+解决办法，每次提交前必须的有这三步：
+（1）git add ./  --------------把所有变化提交到暂存区
+**************************************************************************************************
+小知识：
+·  git add -A  提交所有变化
+·  git add -u  提交被修改(modified)和被删除(deleted)文件，不包括新文件(new)
+·  git add .  提交新文件(new)和被修改(modified)文件，不包括被删除(deleted)文件
+**************************************************************************************************
+（2）git pull origin master  更新最新代码
+（2）git commit -m “提交信息”   切记要写 提交说明
+（3）git push origin master
+**************************************************************************************************
+小知识：
+git push -u origin master 上面命令将本地的master分支推送到origin主机，同时指定origin为默认主机，后面就可以不加任何参数使用git push了
+
+
+
+
+
+
+
+
+
